@@ -1,0 +1,3152 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
+    <title>UVWarehouse · Multi-Product Orders</title>
+    <link rel="icon" type="image/jpeg" href="https://images.yourstory.com/cs/images/companies/511433862275878862692580643743858831654912o-1594796066630.jpg?fm=auto&ar=1:1&mode=fill&fill=solid&fill-color=fff" />
+    <link rel="shortcut icon" type="image/jpeg" href="https://images.yourstory.com/cs/images/companies/511433862275878862692580643743858831654912o-1594796066630.jpg?fm=auto&ar=1:1&mode=fill&fill=solid&fill-color=fff" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        /* ── reset & base ── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', 'Inter', 'Segoe UI', sans-serif;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', 'Inter', 'Segoe UI', sans-serif;
+            font-size: 16px;
+            line-height: 1.65;
+            letter-spacing: 0.01em;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            background: var(--bg);
+            color: var(--text);
+            transition: background 0.2s, color 0.2s;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background-image: none;
+        }
+        body, input, textarea, select, button, optgroup {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            color: var(--text);
+            letter-spacing: 0.01em;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            margin: 0;
+            color: var(--text);
+        }
+        p, label, span, button, a, small, strong {
+            font-family: 'Plus Jakarta Sans', 'Inter', 'Segoe UI', sans-serif;
+            color: var(--text);
+        }
+        .brand .brand-name,
+        .stat-card h4,
+        .form-card h3,
+        .view-tabs .tab,
+        .header-actions button,
+        .btn-primary,
+        .btn-outline,
+        .btn-danger,
+        .btn-success,
+        .btn-warning {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-weight: 600;
+        }
+        .brand .brand-name {
+            font-size: 1.6rem;
+        }
+        .brand-logo-wrap {
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #ffffff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 1px rgba(15, 35, 65, 0.1);
+        }
+        .brand img.brand-logo {
+            width: auto;
+            height: 100%;
+            max-width: 100%;
+            object-fit: contain;
+            image-rendering: crisp-edges;
+        }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 8px;
+            border: 2px solid rgba(255,255,255,0.06);
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .user-avatar.hidden { display: none; }
+        
+        /* Profile modal */
+        .profile-modal {
+            position: fixed;
+            left: 0; right: 0; top: 0; bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(2,8,23,0.5);
+            z-index: 1200;
+        }
+        .profile-modal .modal-card {
+            background: var(--card);
+            border-radius: 18px;
+            padding: 22px;
+            width: 420px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(124,58,237,0.15);
+        }
+        .profile-modal label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .profile-modal input[type="text"],
+        .profile-modal input[type="email"],
+        .profile-modal input[type="file"] {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(124,58,237,0.32);
+            background: rgba(124,58,237,0.08);
+            color: var(--text);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .profile-modal input[type="text"]:focus,
+        .profile-modal input[type="email"]:focus,
+        .profile-modal input[type="file"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(124,58,237,0.12);
+            background: rgba(124,58,237,0.12);
+        }
+        .profile-modal input[readonly] {
+            opacity: 0.9;
+            background: rgba(255,255,255,0.06);
+            color: var(--text-secondary);
+        }
+        .profile-photo-large {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+        }
+        .profile-photo-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .profile-modal .avatar-preview {
+            display: none;
+        }
+        /* Order viewer modal */
+        #orderViewer .viewer-photo { width: 140px; height: 120px; border-radius:8px; object-fit:cover; }
+        #orderViewer .viewer-photo-wrap { display:inline-flex; flex-direction:column; gap:6px; align-items:center; }
+        body.dark {
+            background: #0f172a;
+            background-image: none;
+        }
+        :root {
+            --bg: rgba(255, 255, 255, 0.95);
+            --card: rgba(255, 255, 255, 0.92);
+            --card-border: rgba(124,58,237,0.06);
+            --text: #10212f;
+            --text-secondary: #5f718d;
+            --border: rgba(15, 35, 65, 0.16);
+            --shadow: 0 28px 60px rgba(0, 0, 0, 0.18);
+            --primary: #7c3aed;
+            --primary-light: rgba(124,58,237,0.12);
+            --accent: #7c3aed;
+            --badge-bg: rgba(124,58,237,0.08);
+            --input-bg: rgba(255, 255, 255, 0.98);
+            --hover-bg: rgba(124,58,237,0.06);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        .dark {
+            --bg: #0f172a;
+            --card: #111827;
+            --card-border: #334155;
+            --text: #e8eefc;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --shadow: 0 28px 60px rgba(0, 0, 0, 0.55);
+            --primary: #6366f1;
+            --primary-light: #4338ca;
+            --badge-bg: #111827;
+            --input-bg: #111827;
+            --hover-bg: #1f2937;
+            --success: #34d399;
+            --danger: #fb7185;
+            --warning: #fbbf24;
+        }
+        #app,
+        #auth-screen {
+            max-width: 1300px;
+            width: 100%;
+            background: var(--card);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 36px;
+            box-shadow: var(--shadow);
+            padding: 24px 28px;
+            transition: all 0.2s;
+            border: 1px solid var(--card-border);
+        }
+        #auth-screen {
+            max-width: 480px;
+            margin: auto;
+            text-align: center;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .app-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px 10px;
+            margin-bottom: 24px;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 700;
+            font-size: 1.7rem;
+            letter-spacing: -0.4px;
+            color: var(--primary);
+        }
+        .brand svg {
+            width: 54px;
+            height: 54px;
+            flex-shrink: 0;
+        }
+        .brand .brand-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.05;
+        }
+        .brand .brand-name {
+            font-size: 1.5rem;
+            letter-spacing: -0.6px;
+        }
+        .brand .brand-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            letter-spacing: 0;
+            margin-top: 2px;
+        }
+        h3,
+        h4,
+        .view-tabs .tab,
+        .stat-card h4,
+        .form-card h3,
+        .brand .brand-name,
+        .btn-primary,
+        .btn-outline,
+        .btn-danger,
+        .btn-success,
+        .btn-warning {
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .view-tabs .tab {
+            font-size: 0.95rem;
+        }
+        .stat-card h4 {
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-secondary);
+        }
+        .form-card h3 {
+            letter-spacing: 0.04em;
+        }
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 12px;
+        }
+        .header-actions button {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.15s;
+            background: var(--card);
+        }
+        .header-actions button:hover {
+            background: var(--hover-bg);
+            border-color: var(--primary);
+        }
+        .header-actions .logout-btn {
+            background: #fee2e2;
+            color: #b91c1c;
+            border-color: #fecaca;
+        }
+        .dark .header-actions .logout-btn {
+            background: #3b1f2b;
+            color: #fca5a5;
+            border-color: #7f2d3b;
+        }
+        .view-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 4px;
+            margin-bottom: 28px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+        }
+        .view-tabs .tab {
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-secondary);
+            transition: 0.15s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .view-tabs .tab i {
+            font-size: 1rem;
+        }
+        .view-tabs .tab.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(42, 109, 244, 0.25);
+        }
+        .view-tabs .tab:not(.active):hover {
+            background: var(--hover-bg);
+            color: var(--text);
+        }
+        .view-tabs .tab.admin-only {
+            display: none;
+        }
+        .view-tabs .tab.admin-only.visible {
+            display: inline-flex;
+        }
+        .admin-only {
+            display: none;
+        }
+        .admin-only.visible {
+            display: revert;
+        }
+        .view-panel {
+            display: block;
+            animation: fade 0.2s ease;
+        }
+        @keyframes fade {
+            from {
+                opacity: 0.6;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 760px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+        }
+        .stat-card {
+            background: var(--bg);
+            padding: 18px 20px;
+            border-radius: 28px;
+            border-left: 4px solid var(--primary);
+        }
+        .stat-card h4 {
+            font-weight: 500;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+        }
+        .stat-card .number {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        .stat-card .number.danger {
+            color: var(--danger);
+        }
+        .stat-card .number.warning {
+            color: var(--warning);
+        }
+        .stat-card .number.success {
+            color: var(--success);
+        }
+        .form-card {
+            background: var(--bg);
+            padding: 22px 20px;
+            border-radius: 28px;
+        }
+        .form-card h3 {
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+        }
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 0.95rem;
+            transition: 0.15s;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+            border-color: transparent;
+        }
+        .input-group input[type="file"] {
+            padding: 10px 14px;
+            cursor: pointer;
+        }
+        .input-group input[type="number"] {
+            appearance: textfield;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+        }
+        .input-group input[type="number"]::-webkit-inner-spin-button,
+        .input-group input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .password-field-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .password-field-wrapper label,
+        .password-field-wrapper input {
+            display: block;
+            width: 100%;
+        }
+        .password-field-wrapper input {
+            padding-right: 110px;
+            box-sizing: border-box;
+        }
+        .password-field-wrapper input.password-change-input {
+            width: 100%;
+            padding: 12px 14px;
+            margin-top: 6px;
+            border-radius: 14px;
+            border: 1px solid rgba(124, 58, 237, 0.75);
+            background: rgba(124, 58, 237, 0.12);
+            color: var(--text);
+            box-shadow: inset 0 2px 8px rgba(15, 23, 42, 0.08);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .password-field-wrapper input.password-change-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.14);
+            background: rgba(124, 58, 237, 0.16);
+        }
+        .password-field-wrapper input.password-change-input::placeholder {
+            color: rgba(255, 255, 255, 0.75);
+        }
+        .password-toggle-btn {
+            position: absolute;
+            right: 10px;
+            top: calc(50% + 4px);
+            transform: translateY(-50%);
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            min-width: 56px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            line-height: 1;
+            z-index: 1;
+            box-shadow: none;
+        }
+        .user-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 24px;
+            border-radius: 999px;
+            background: rgba(15, 35, 65, 0.08);
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .user-toggle input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            cursor: pointer;
+        }
+        .user-toggle span {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid var(--border);
+            transition: transform 0.2s, background 0.2s;
+            transform: translateX(2px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .user-toggle input:checked + span {
+            transform: translateX(24px);
+            background: var(--primary);
+            border-color: transparent;
+        }
+        .user-toggle input:focus + span {
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+        }
+
+        /* ── Product row with qty toggles ── */
+        .product-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+            position: relative;
+        }
+        .product-row .input-wrapper {
+            flex: 2;
+            min-width: 140px;
+            position: relative;
+        }
+        .product-row .input-wrapper input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+        }
+        .product-row .input-wrapper .suggestions {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            display: none;
+            padding: 4px 0;
+        }
+        .product-row .input-wrapper .suggestions .suggestion-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: 0.1s;
+            font-size: 0.9rem;
+        }
+        .product-row .input-wrapper .suggestions .suggestion-item:hover {
+            background: var(--hover-bg);
+        }
+        .dark .product-row .input-wrapper .suggestions .suggestion-item:hover {
+            background: var(--hover-bg);
+        }
+
+        /* qty group with stepper */
+        .qty-group {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            background: var(--input-bg);
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            padding: 2px;
+            flex-shrink: 0;
+        }
+        .qty-group .qty-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.15s;
+            flex-shrink: 0;
+        }
+        .qty-group .qty-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text);
+        }
+        .qty-group .qty-btn:active {
+            transform: scale(0.92);
+        }
+        .qty-group input[type="number"] {
+            width: 48px;
+            padding: 6px 2px;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            -moz-appearance: textfield;
+            outline: none;
+        }
+        .qty-group input[type="number"]::-webkit-inner-spin-button,
+        .qty-group input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .qty-group input[type="number"]:focus {
+            outline: none;
+        }
+
+        .product-row .remove-product {
+            background: transparent;
+            border: none;
+            color: var(--danger);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: 0.15s;
+            flex-shrink: 0;
+        }
+        .product-row .remove-product:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .add-product-btn {
+            background: var(--primary-light);
+            border: 1px dashed var(--primary);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .add-product-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid transparent;
+        }
+        .btn-primary:hover {
+            opacity: 0.85;
+            transform: scale(0.98);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.15s;
+            color: var(--text);
+        }
+        .btn-outline:hover {
+            background: var(--hover-bg);
+        }
+        .btn-secondary {
+            background: rgba(124, 58, 237, 0.12);
+            border: 1px solid rgba(124, 58, 237, 0.35);
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.15s ease, transform 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-secondary:hover {
+            background: rgba(124, 58, 237, 0.18);
+            transform: scale(0.98);
+        }
+        .btn-danger {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.15s;
+        }
+        .dark .btn-danger {
+            background: #3b1f2b;
+            color: #fca5a5;
+            border-color: #7f2d3b;
+        }
+        .btn-success {
+            background: var(--success);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-success:hover {
+            opacity: 0.85;
+            transform: scale(0.98);
+        }
+        .btn-warning {
+            background: var(--warning);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-warning:hover {
+            opacity: 0.85;
+        }
+
+        .order-photos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+        .order-photos img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: #f0f0f0;
+            cursor: pointer;
+        }
+        .order-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .order-item .order-meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            justify-content: space-between;
+        }
+        .order-item .order-id {
+            font-weight: 600;
+        }
+        .order-item .order-by {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-left: 8px;
+        }
+        .badge {
+            background: var(--badge-bg);
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge.success {
+            background: #dcfce7;
+            color: #166534;
+        }
+        .dark .badge.success {
+            background: #14532d;
+            color: #86efac;
+        }
+        .badge.danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .dark .badge.danger {
+            background: #7f1d1d;
+            color: #fca5a5;
+        }
+        .badge.warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .dark .badge.warning {
+            background: #78350f;
+            color: #fcd34d;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .mt-3 {
+            margin-top: 18px;
+        }
+        .mb-2 {
+            margin-bottom: 12px;
+        }
+        .log-entry {
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+            padding: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+        }
+        .log-entry span:first-child {
+            font-weight: 500;
+        }
+
+        @media (max-width: 500px) {
+            #app,
+            #auth-screen {
+                padding: 16px;
+            }
+            .brand {
+                font-size: 1.2rem;
+            }
+            .view-tabs .tab {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+            .stat-card .number {
+                font-size: 1.8rem;
+            }
+            .header-actions button {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            .product-row .input-wrapper {
+                min-width: 100px;
+                flex: 1 1 100%;
+            }
+            .qty-group input[type="number"] {
+                width: 40px;
+            }
+        }
+
+        .user-badge {
+            background: var(--primary-light);
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .persist-notice {
+            background: var(--badge-bg);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .auth-form .input-group {
+            margin-bottom: 0;
+        }
+        .upload-preview {
+            margin-top: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px;
+        }
+        .upload-preview img {
+            max-width: 140px;
+            max-height: 140px;
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            object-fit: cover;
+            background: var(--bg);
+        }
+        .upload-preview .placeholder {
+            width: 140px;
+            height: 140px;
+            border-radius: 16px;
+            border: 2px dashed var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            background: var(--bg);
+            text-align: center;
+            padding: 8px;
+        }
+        .upload-feedback {
+            margin-top: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .upload-feedback.success {
+            color: var(--success);
+        }
+        .upload-feedback.error {
+            color: var(--danger);
+        }
+        .file-input-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .file-input-wrapper input[type="file"] {
+            flex: 1;
+            min-width: 180px;
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .file-input-wrapper input[type="file"]::file-selector-button {
+            padding: 6px 16px;
+            border-radius: 30px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            margin-right: 12px;
+        }
+        .file-input-wrapper input[type="file"]::file-selector-button:hover {
+            opacity: 0.85;
+        }
+
+        .orders-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .orders-toolbar input[type="text"] {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+        }
+        .orders-toolbar select {
+            padding: 10px 16px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+        }
+        .order-list-container {
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        .recent-uploads-card .upload-item {
+            border-bottom: 1px solid var(--border);
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .recent-uploads-card .upload-item:last-child {
+            border-bottom: none;
+        }
+        .recent-uploads-card .upload-item img {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+        .recent-uploads-card .upload-item .meta {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+        .recent-uploads-card .upload-item .meta strong {
+            display: block;
+            font-weight: 600;
+        }
+        .recent-uploads-card .upload-item .meta small {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+        .order-list-container::-webkit-scrollbar,
+        .upload-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .order-list-container::-webkit-scrollbar-track,
+        .upload-list::-webkit-scrollbar-track {
+            background: var(--border);
+            border-radius: 10px;
+        }
+        .order-list-container::-webkit-scrollbar-thumb,
+        .upload-list::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        /* Inventory table */
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .inventory-table th,
+        .inventory-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        .inventory-table th {
+            background: var(--badge-bg);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .inventory-table .stock-qty {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .inventory-table .stock-qty.low {
+            color: var(--danger);
+        }
+        .inventory-table .stock-qty.medium {
+            color: var(--warning);
+        }
+        .inventory-table .stock-qty.high {
+            color: var(--success);
+        }
+        .inventory-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .inventory-actions input {
+            width: 70px;
+            padding: 6px 10px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            text-align: center;
+        }
+        .inventory-actions button {
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: none;
+            font-weight: 500;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .inventory-actions .add-btn {
+            background: var(--success);
+            color: white;
+        }
+        .inventory-actions .add-btn:hover {
+            opacity: 0.8;
+        }
+        .inventory-actions .remove-btn {
+            background: var(--danger);
+            color: white;
+        }
+        .inventory-actions .remove-btn:hover {
+            opacity: 0.8;
+        }
+        .inventory-actions .delete-btn {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .dark .inventory-actions .delete-btn {
+            background: #3b1f2b;
+            color: #fca5a5;
+        }
+        .inventory-actions .delete-btn:hover {
+            opacity: 0.8;
+        }
+        .inventory-summary {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .inventory-summary .summary-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 12px 20px;
+            flex: 1;
+            min-width: 120px;
+        }
+        .inventory-summary .summary-item .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .inventory-summary .summary-item .value {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .inline-flex {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .gap-1 {
+            gap: 4px;
+        }
+
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 14px;
+            margin: 4px 0;
+        }
+        .product-list .product-tag {
+            background: var(--badge-bg);
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .product-list .product-tag .qty-badge {
+            background: var(--primary);
+            color: white;
+            border-radius: 30px;
+            padding: 0 8px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .dark .product-list .product-tag .qty-badge {
+            background: var(--primary-light);
+            color: var(--text);
+        }
+
+        .add-product-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: flex-end;
+            margin-bottom: 24px;
+            padding: 16px;
+            background: var(--badge-bg);
+            border-radius: 28px;
+        }
+        .add-product-form .input-group {
+            flex: 1;
+            min-width: 160px;
+            margin-bottom: 0;
+        }
+        .add-product-form .input-group label {
+            font-size: 0.8rem;
+        }
+        .add-product-form .input-group input {
+            padding: 10px 14px;
+        }
+        .add-product-form .btn-primary {
+            padding: 10px 24px;
+            flex-shrink: 0;
+        }
+        .enter-hint {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            font-style: italic;
+            margin-left: 4px;
+        }
+
+        /* qty group dark tweaks */
+        .dark .qty-group {
+            background: var(--input-bg);
+            border-color: var(--border);
+        }
+        .dark .qty-group .qty-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text);
+        }
+        /* Responsive / Mobile-friendly adjustments */
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            #app, #auth-screen {
+                max-width: 100%;
+                width: 100%;
+                margin: 0;
+                border-radius: 18px;
+                padding: 14px;
+            }
+            .app-header {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                align-items: center;
+                padding: 10px 8px;
+            }
+            .brand { width: 100%; display:flex; align-items:center; gap:10px; }
+            .brand-text { display:flex; flex-direction:column; }
+            .brand .brand-name { font-size: 1.25rem; }
+            .brand-logo-wrap { width: 48px; height: 48px; }
+            .header-actions { margin-left:auto; display:flex; gap:8px; align-items:center; }
+            .view-tabs { display:flex; overflow-x:auto; gap:6px; padding:8px 0; }
+            .view-tabs .tab { flex:0 0 auto; padding:8px 12px; border-radius:10px; }
+            .view-panel { padding: 10px 0; }
+            .orders-toolbar { flex-direction:column; gap:8px; align-items:stretch; }
+            .orders-toolbar input, .orders-toolbar select { width:100%; }
+            input[type="text"], input[type="email"], textarea, select { font-size: 15px; }
+            .btn-primary, .btn-outline, .btn-danger { padding: 10px 14px; font-size: 0.95rem; }
+            .product-list { display:flex; flex-wrap:wrap; gap:6px; }
+            .order-item { padding:10px; border-radius:12px; }
+            .profile-modal .modal-card { width:92%; max-width:420px; padding:14px; }
+            .brand-subtitle { display:none; }
+        }
+        /* Enhanced UI/UX: cards, controls, and touch targets */
+        .app-header {
+            padding: 16px 24px;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .stat-card, .form-card {
+            padding: 14px;
+            border-radius: 14px;
+            background: var(--card);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 6px 22px rgba(2,8,23,0.12);
+        }
+        .order-item {
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            background: transparent;
+            margin-bottom: 10px;
+        }
+        .orders-toolbar {
+            display:flex;
+            gap:10px;
+            align-items:center;
+            margin-bottom:12px;
+        }
+        .orders-toolbar input[type="text"], .orders-toolbar select {
+            padding:10px 12px;
+            border-radius:10px;
+            border:1px solid var(--card-border);
+            background: var(--input-bg);
+            min-width: 0;
+            flex:1 1 auto;
+        }
+        .btn-primary {
+            background: var(--primary);
+            border: none;
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 10px;
+            box-shadow: 0 6px 18px rgba(11,99,255,0.14);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: var(--text);
+        }
+        button { cursor: pointer; }
+        button:active { transform: translateY(1px); }
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 0 5px rgba(11,99,255,0.06);
+            border-color: rgba(11,99,255,0.3);
+        }
+        .order-photos img { width:64px; height:64px; border-radius:8px; object-fit:cover; margin-right:6px; }
+        .product-tag { background: rgba(0,0,0,0.04); padding:6px 8px; border-radius:8px; margin-right:6px; display:inline-flex; align-items:center; }
+        .header-actions button { padding:8px; border-radius:10px; border:none; background:transparent; }
+
+        /* Toolbar stacking on very small screens */
+        @media (max-width:420px) {
+            .orders-toolbar { flex-direction: column; align-items:stretch; }
+            .orders-toolbar .btn-primary { width:100%; }
+            .view-tabs .tab { padding:8px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== AUTH SCREEN ====== -->
+    <div id="auth-screen">
+        <div class="brand" style="justify-content:center; margin-bottom:16px;">
+            <div class="brand-logo-wrap">
+                <img class="brand-logo" src="https://images.yourstory.com/cs/images/companies/511433862275878862692580643743858831654912o-1594796066630.jpg?fm=auto&ar=1:1&mode=fill&fill=solid&fill-color=fff" alt="UVWarehouse logo" />
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">UVWarehouse</span>
+                <span class="brand-subtitle">Inventory & Order</span>
+            </div>
+        </div>
+        <div class="auth-form" id="login-form">
+            <div class="input-group"><input type="email" id="loginEmail" placeholder="Email" required /></div>
+            <div class="input-group" style="position:relative;">
+                <input type="password" id="loginPass" placeholder="Password" required />
+                <button type="button" id="toggleLoginPassword" class="btn-outline" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); padding:6px 10px; font-size:0.85rem;">Show</button>
+            </div>
+            <button class="btn-primary" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Log In</button>
+        </div>
+    </div>
+
+    <!-- ====== MAIN APP ====== -->
+    <div id="app" class="hidden">
+
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="brand">
+                <div class="brand-logo-wrap">
+                    <img class="brand-logo" src="https://images.yourstory.com/cs/images/companies/511433862275878862692580643743858831654912o-1594796066630.jpg?fm=auto&ar=1:1&mode=fill&fill=solid&fill-color=fff" alt="UVWarehouse logo" />
+                </div>
+                <div class="brand-text">
+                    <span class="brand-name">UVWarehouse</span>
+                    <span class="brand-subtitle">Inventory & Order</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <span class="persist-notice"><i class="fas fa-database"></i> IndexedDB + localStorage</span>
+                <span id="userDisplay" class="user-badge"><i class="fas fa-user-circle"></i> Guest</span>
+                <img id="userAvatar" class="user-avatar hidden" src="" alt="avatar" title="View profile photo" style="cursor:pointer;" />
+                <button id="editProfileBtn" class="btn-outline" title="Edit Profile">
+                    <i class="fas fa-user-edit"></i>
+                </button>
+                <button id="themeToggle" title="Dark/Light">
+                    <i class="fas fa-moon"></i> <span id="themeLabel">Dark</span>
+                </button>
+                <button id="logoutBtn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </header>
+
+        <!-- Profile Modal (hidden by default) -->
+        <div id="profileModal" class="profile-modal" style="display:none;">
+            <div class="modal-card">
+                <h3>Edit Profile</h3>
+                <div class="profile-photo-large">
+                    <img id="avatarPreviewImg" src="" alt="Profile photo preview" />
+                </div>
+                <div style="text-align:center; margin-bottom:16px;">
+                    <label style="font-size:0.85rem; color:var(--text-secondary); display:block; margin-bottom:6px;">Upload Photo</label>
+                    <input type="file" id="profilePhotoInput" accept="image/*" style="display:block; margin:0 auto;" />
+                </div>
+                <div style="margin-top:12px;">
+                    <label style="font-size:0.85rem; color:var(--text-secondary);">Name</label>
+                    <input type="text" id="profileName" style="width:100%; padding:8px; margin-top:6px;" />
+                </div>
+                <div style="margin-top:12px;">
+                    <label style="font-size:0.85rem; color:var(--text-secondary);">Email (unchangeable)</label>
+                    <input type="email" id="profileEmail" readonly style="width:100%; padding:8px; margin-top:6px; background:rgba(0,0,0,0.03);" />
+                </div>
+                <div style="display:flex; gap:8px; justify-content:flex-end; margin-top:14px;">
+                    <button class="btn-outline" onclick="closeProfileEditor()">Cancel</button>
+                    <button class="btn-primary" onclick="saveProfileChanges()">Save</button>
+                </div>
+            </div>
+        </div>
+        <div id="photoViewerModal" class="profile-modal" style="display:none;">
+            <div class="modal-card" style="max-width: 500px; width: 100%; padding: 20px; text-align: center;">
+                <h3>Profile Photo</h3>
+                <div class="profile-photo-large" style="margin: 16px auto; width: 240px; height: 240px;">
+                    <img id="photoViewerImg" src="" alt="Profile photo" />
+                </div>
+                <button class="btn-outline" onclick="closePhotoViewer()" style="margin-top: 12px;">Close</button>
+            </div>
+        </div>
+        <div id="passwordChangeModal" class="profile-modal" style="display:none;">
+            <div class="modal-card" style="max-width: 420px; width: 100%; padding: 18px;">
+                <h3>Change User Password</h3>
+                <div style="margin-top:14px; color:var(--text);">
+                    <strong>Old Password:</strong>
+                    <div id="oldPasswordValue" style="margin-top:6px; padding:10px; background:var(--input-bg); border-radius:10px; color:var(--text);">&nbsp;</div>
+                </div>
+                <div class="password-field-wrapper" style="margin-top:16px;">
+                    <label style="font-size:0.85rem; color:var(--primary);">New Password</label>
+                    <input type="password" id="newPasswordForUser" class="password-change-input" placeholder="Enter new password" />
+                    <button type="button" id="toggleNewUserPassword" class="btn-outline password-toggle-btn">Show</button>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+                    <button class="btn-outline" onclick="closePasswordChangeModal()">Cancel</button>
+                    <button class="btn-primary" onclick="saveChangedUserPassword()">Save</button>
+                </div>
+            </div>
+        </div>
+        <!-- Order Viewer Modal (hidden by default) -->
+        <div id="orderViewer" class="profile-modal" style="display:none;">
+            <div class="modal-card">
+                <h3>Order <span id="viewerOrderNumber"></span></h3>
+                <div id="viewerDetails" style="margin-top:8px; color:var(--text-secondary);"></div>
+                <div id="viewerPhotos" style="display:flex; gap:12px; flex-wrap:wrap; margin-top:12px;"></div>
+                <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+                    <button class="btn-outline" onclick="closeOrderViewer()">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABS -->
+        <div class="view-tabs" id="tabContainer">
+            <button class="tab active" data-view="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</button>
+            <button class="tab" data-view="orders"><i class="fas fa-box"></i> Orders</button>
+            <button class="tab" data-view="upload" id="uploadTab"><i class="fas fa-cloud-upload-alt"></i> Upload Order</button>
+            <button class="tab admin-only" data-view="inventory"><i class="fas fa-warehouse"></i> Inventory</button>
+            <button class="tab admin-only" data-view="users"><i class="fas fa-users"></i> Users</button>
+            <button class="tab admin-only" data-view="logs"><i class="fas fa-history"></i> Logs</button>
+        </div>
+
+        <!-- ====== DASHBOARD VIEW ====== -->
+        <div class="view-panel" id="dashboard-view">
+            <div class="grid-2col">
+                <div class="stat-card">
+                    <h4><i class="fas fa-box"></i> Total Orders</h4>
+                    <div class="number" id="stat-total">0</div>
+                </div>
+                <div class="stat-card">
+                    <h4><i class="fas fa-users"></i> Users</h4>
+                    <div class="number" id="stat-users">0</div>
+                </div>
+                <div class="stat-card admin-only">
+                    <h4><i class="fas fa-cubes"></i> Total Stock Units</h4>
+                    <div class="number" id="stat-total-stock">0</div>
+                </div>
+            </div>
+
+            <div class="form-card mt-3">
+                <h3><i class="fas fa-cloud-upload-alt"></i> Quick Actions</h3>
+                <button class="btn-primary" onclick="showView('upload')">
+                    <i class="fas fa-upload"></i> Upload Order
+                </button>
+                <button class="btn-outline admin-only" onclick="showView('inventory')" style="margin-left:10px;">
+                    <i class="fas fa-warehouse"></i> Manage Inventory
+                </button>
+            </div>
+
+            <div class="form-card mt-3">
+                <h3><i class="fas fa-chart-line"></i> Recent Activity</h3>
+                <div id="recentActivity">
+                    <p style="color:var(--text-secondary);">No recent activity</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== ORDERS VIEW ====== -->
+        <div class="view-panel hidden" id="orders-view">
+            <div class="orders-toolbar">
+                <input type="text" id="orderSearch" placeholder="🔍 Search by Order ID or Product..." />
+                <button class="btn-primary" onclick="renderOrders()">
+                    <i class="fas fa-filter"></i> Filter
+                </button>
+                <button class="btn-outline" onclick="clearOrderFilters()">
+                    <i class="fas fa-times"></i> Clear Filters
+                </button>
+            </div>
+
+            <div class="order-list-container" id="orderList">
+                <div class="empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <p>No orders found. Upload your first order!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== UPLOAD VIEW – with qty toggles ====== -->
+        <div class="view-panel hidden" id="upload-view">
+            <div class="grid-2col">
+                <div class="form-card">
+                    <h3><i class="fas fa-cloud-upload-alt"></i> Upload New Order</h3>
+                    <div class="input-group">
+                        <label><i class="fas fa-hashtag"></i> Order Number *</label>
+                        <input type="text" id="orderNumber" placeholder="e.g., ORD-2024-001" required />
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-boxes"></i> Products (name & qty) *</label>
+                        <div id="productRows">
+                            <!-- Initial row added via JS -->
+                        </div>
+                        <button type="button" class="add-product-btn" onclick="addProductRow()">
+                            <i class="fas fa-plus-circle"></i> Add Product
+                        </button>
+                        <small style="color:var(--text-secondary); font-size:0.75rem; display:block; margin-top:4px;">
+                            <i class="fas fa-info-circle"></i> Use + / − buttons or type quantity directly.
+                        </small>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-images"></i> Upload Images *</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="orderPhotos" accept="image/*" capture="environment" multiple />
+                            <label class="btn-outline" for="orderPhotos" style="margin:0; cursor:pointer;">
+                                <i class="fas fa-camera"></i> Open Camera / Gallery
+                            </label>
+                        </div>
+                        <div class="upload-preview" id="uploadPreview">
+                            <div class="placeholder">No photos selected</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="uploadOrderBtn" style="width:100%; margin-top:12px;">
+                        <i class="fas fa-upload"></i> Upload Order
+                    </button>
+                    <div class="upload-feedback hidden" id="uploadFeedback"></div>
+                </div>
+
+                <div class="form-card recent-uploads-card">
+                    <h3><i class="fas fa-clock"></i> Recent Uploads</h3>
+                    <div id="recentUploads">
+                        <p style="color:var(--text-secondary); font-size:0.9rem;">No recent uploads</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== INVENTORY VIEW ====== -->
+        <div class="view-panel hidden" id="inventory-view">
+            <div class="form-card">
+                <h3><i class="fas fa-warehouse"></i> Inventory Management</h3>
+
+                <div class="add-product-form">
+                    <div class="input-group">
+                        <label><i class="fas fa-barcode"></i> Part Code</label>
+                        <input type="text" id="newProductCode" placeholder="e.g., PC-001" oninput="this.value = this.value.toUpperCase();" />
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-tag"></i> Product Name</label>
+                        <input type="text" id="newProductName" placeholder="e.g., Wireless Mouse" />
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-sort-amount-up"></i> Initial Stock</label>
+                        <input type="number" id="newProductStock" placeholder="0" min="0" value="0" />
+                    </div>
+                    <button class="btn-primary" onclick="addNewProduct()">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
+
+                <div class="inventory-summary">
+                    <div class="summary-item">
+                        <div class="label">Total Products</div>
+                        <div class="value" id="inv-total-products">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="label">Total Stock Units</div>
+                        <div class="value" id="inv-total-units">0</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="label">Low Stock Items (&lt; 10)</div>
+                        <div class="value" id="inv-low-stock">0</div>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+                    <input type="text" id="invSearch" placeholder="🔍 Search product..." oninput="renderInventory()" style="flex:1; min-width:200px; padding:10px 16px; border-radius:30px; border:1px solid var(--border); background:var(--input-bg); color:var(--text);" />
+                    <button class="btn-primary" onclick="renderInventory()"><i class="fas fa-filter"></i> Filter</button>
+                    <button class="btn-outline" onclick="document.getElementById('invSearch').value=''; renderInventory();">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                    <button class="btn-outline" onclick="downloadInventoryCsv()">
+                        <i class="fas fa-file-csv"></i> Download Stock CSV
+                    </button>
+                </div>
+
+                <div style="overflow-x:auto;">
+                    <table class="inventory-table" id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>Part Code</th>
+                                <th>Product</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Adjust Stock <span class="enter-hint">(type + ↵ to add to stock)</span></th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryBody">
+                            <tr><td colspan="5" class="empty-state" style="padding:30px;">No products in inventory</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== USERS VIEW ====== -->
+        <div class="view-panel hidden" id="users-view">
+            <div class="form-card">
+                <h3><i class="fas fa-users"></i> Manage Users</h3>
+                <div class="stat-card mb-3">
+                    <h4><i class="fas fa-user-friends"></i> Total Users</h4>
+                    <div class="number" id="userCountLabel">0</div>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="text" id="bulkUserPrefix" placeholder="e.g. staff@company.com" />
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-lock"></i> Default Password</label>
+                    <input type="text" id="bulkUserPassword" value="Welcome@123" />
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-user-shield"></i> Role</label>
+                    <select id="bulkUserRole">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <button class="btn-primary" id="createBulkUsersBtn" style="margin-bottom: 12px;">
+                    <i class="fas fa-user-plus"></i> Create User
+                </button>
+                <div class="upload-feedback hidden" id="bulkUserFeedback"></div>
+                <div id="usersList" class="mt-3"></div>
+            </div>
+        </div>
+
+        <!-- ====== LOGS VIEW ====== -->
+        <div class="view-panel hidden" id="logs-view">
+            <div class="form-card">
+                <h3><i class="fas fa-history"></i> System Logs</h3>
+                <div id="logsList"></div>
+                <button class="btn-danger mt-3" onclick="clearLogs()">
+                    <i class="fas fa-trash"></i> Clear Logs
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <script>
+        // ============================================================
+        //  STATE
+        // ============================================================
+        const state = {
+            user: null,
+            theme: 'light',
+            currentView: 'dashboard'
+        };
+
+        // ============================================================
+        //  DATA STORE
+        // ============================================================
+        const storageState = {
+            db: null,
+            initialized: false
+        };
+
+        function readStorageValue(key, fallback) {
+            const raw = localStorage.getItem(key);
+            if (raw === null) return fallback;
+            try {
+                return JSON.parse(raw);
+            } catch (error) {
+                return raw;
+            }
+        }
+
+        function writeStorageValue(key, value) {
+            const serialized = typeof value === 'string' ? value : JSON.stringify(value);
+            localStorage.setItem(key, serialized);
+            if (storageState.db) {
+                try {
+                    const tx = storageState.db.transaction(['entries'], 'readwrite');
+                    tx.objectStore('entries').put({ key, value: serialized });
+                } catch (error) {
+                    console.warn('IndexedDB write failed, using localStorage only.', error);
+                }
+            }
+        }
+
+        async function initPersistentStorage() {
+            if (storageState.initialized) return;
+            storageState.initialized = true;
+
+            if (!('indexedDB' in window)) {
+                return;
+            }
+
+            try {
+                const request = indexedDB.open('uvwarehouse-persistent-db', 1);
+                await new Promise((resolve) => {
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+                        if (!db.objectStoreNames.contains('entries')) {
+                            db.createObjectStore('entries', { keyPath: 'key' });
+                        }
+                    };
+                    request.onsuccess = () => {
+                        storageState.db = request.result;
+                        resolve();
+                    };
+                    request.onerror = () => {
+                        console.warn('IndexedDB is unavailable; falling back to localStorage.');
+                        resolve();
+                    };
+                });
+
+                const keys = ['orders', 'users', 'logs', 'inventory', 'currentUser', 'theme'];
+                for (const key of keys) {
+                    const localValue = localStorage.getItem(key);
+                    if (localValue === null) {
+                        const value = await new Promise((resolve) => {
+                            const tx = storageState.db.transaction(['entries'], 'readonly');
+                            const request = tx.objectStore('entries').get(key);
+                            request.onsuccess = () => resolve(request.result?.value ?? null);
+                            request.onerror = () => resolve(null);
+                        });
+                        if (value !== null) {
+                            localStorage.setItem(key, value);
+                        }
+                    } else if (storageState.db) {
+                        try {
+                            const tx = storageState.db.transaction(['entries'], 'readwrite');
+                            tx.objectStore('entries').put({ key, value: localValue });
+                        } catch (error) {
+                            console.warn('Unable to sync to IndexedDB.', error);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.warn('Persistent storage initialization failed.', error);
+            }
+        }
+
+        const db = {
+            getOrders: () => readStorageValue('orders', []),
+            saveOrders: (orders) => writeStorageValue('orders', orders),
+            getUsers: () => readStorageValue('users', []),
+            saveUsers: (users) => {
+                const normalized = users.map(u => ({
+                    ...u,
+                    email: (u.email || '').toLowerCase()
+                }));
+                writeStorageValue('users', normalized);
+            },
+            getLogs: () => readStorageValue('logs', []),
+            saveLogs: (logs) => writeStorageValue('logs', logs),
+            getInventory: () => readStorageValue('inventory', []),
+            saveInventory: (inv) => writeStorageValue('inventory', inv),
+            addLog: (action, details) => {
+                const logs = db.getLogs();
+                logs.unshift({
+                    timestamp: new Date().toISOString(),
+                    action,
+                    details,
+                    user: state.user?.email || 'system'
+                });
+                db.saveLogs(logs.slice(0, 100));
+            }
+        };
+
+        // ============================================================
+        //  INVENTORY HELPERS
+        // ============================================================
+        function getInventory() { return db.getInventory(); }
+
+        function saveInventory(inv) { db.saveInventory(inv); }
+
+        function findInventoryItem(productName) {
+            if (!productName) return null;
+            const inv = getInventory();
+            return inv.find(i => i.productName.toLowerCase() === productName.toLowerCase());
+        }
+
+        function getInventoryPartCode(productName) {
+            const item = findInventoryItem(productName);
+            return item?.partCode || '';
+        }
+
+        function updateStock(productName, delta, reason) {
+            if (!productName) return null;
+            const inv = getInventory();
+            let item = inv.find(i => i.productName.toLowerCase() === productName.toLowerCase());
+            if (!item) {
+                item = { productName: productName, stock: 0 };
+                inv.push(item);
+            }
+            const newStock = Math.max(0, item.stock + delta);
+            item.stock = newStock;
+            saveInventory(inv);
+            db.addLog('inventory_update', `${productName}: ${delta > 0 ? '+' : ''}${delta} → ${newStock} (${reason || 'adjustment'})`);
+            return item;
+        }
+
+        function setExactStock(productName, newValue, reason) {
+            if (!productName) return null;
+            if (newValue < 0) newValue = 0;
+            const inv = getInventory();
+            let item = inv.find(i => i.productName.toLowerCase() === productName.toLowerCase());
+            if (!item) {
+                item = { productName: productName, stock: 0 };
+                inv.push(item);
+            }
+            const oldStock = item.stock;
+            item.stock = newValue;
+            saveInventory(inv);
+            db.addLog('inventory_update', `${productName}: ${oldStock} → ${newValue} (${reason || 'set exact'})`);
+            return item;
+        }
+
+        function reduceStockForOrder(productName, qty) {
+            if (!productName || !qty || qty < 1) return { success: false, message: 'Invalid product or quantity' };
+            const item = findInventoryItem(productName);
+            if (!item) {
+                return { success: false, message: `Product "${productName}" not found in inventory. Please add it first.` };
+            }
+            if (item.stock < qty) {
+                return { success: false, message: `Insufficient stock for "${productName}". Available: ${item.stock}, requested: ${qty}` };
+            }
+            updateStock(productName, -qty, `Order deduction (${qty} units)`);
+            return { success: true, message: `Stock reduced for "${productName}" by ${qty}. Remaining: ${item.stock - qty}` };
+        }
+
+        // ============================================================
+        //  AUTH
+        // ============================================================
+        function isValidEmail(email) {
+            return typeof email === 'string' && email.trim().length > 0 && email.includes('@');
+        }
+
+        function initAuth() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                state.user = JSON.parse(savedUser);
+                state.user.email = state.user.email.toLowerCase();
+                localStorage.setItem('currentUser', JSON.stringify(state.user));
+                showApp();
+            }
+
+            const loginEmailInput = document.getElementById('loginEmail');
+            loginEmailInput.oninput = () => {
+                loginEmailInput.value = loginEmailInput.value.toLowerCase();
+            };
+            const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+            const loginPassInput = document.getElementById('loginPass');
+            if (toggleLoginPassword && loginPassInput) {
+                toggleLoginPassword.onclick = () => {
+                    const isPassword = loginPassInput.type === 'password';
+                    loginPassInput.type = isPassword ? 'text' : 'password';
+                    toggleLoginPassword.textContent = isPassword ? 'Hide' : 'Show';
+                };
+            }
+            const toggleNewUserPassword = document.getElementById('toggleNewUserPassword');
+            const newPasswordForUser = document.getElementById('newPasswordForUser');
+            if (toggleNewUserPassword && newPasswordForUser) {
+                toggleNewUserPassword.onclick = () => {
+                    const isPassword = newPasswordForUser.type === 'password';
+                    newPasswordForUser.type = isPassword ? 'text' : 'password';
+                    toggleNewUserPassword.textContent = isPassword ? 'Hide' : 'Show';
+                };
+            }
+
+            const bulkUserPrefixInput = document.getElementById('bulkUserPrefix');
+            if (bulkUserPrefixInput) {
+                bulkUserPrefixInput.oninput = () => {
+                    bulkUserPrefixInput.value = bulkUserPrefixInput.value.toLowerCase();
+                };
+            }
+
+            document.getElementById('loginBtn').onclick = () => {
+                const email = loginEmailInput.value.trim().toLowerCase();
+                const pass = document.getElementById('loginPass').value;
+                if (!isValidEmail(email)) {
+                    alert('⚠️ Please enter a valid email address with @.');
+                    return;
+                }
+                const users = db.getUsers();
+                const user = users.find(u => u.email.toLowerCase() === email && u.password === pass);
+
+                if (user) {
+                    state.user = { ...user, email: user.email.toLowerCase() };
+                    localStorage.setItem('currentUser', JSON.stringify(state.user));
+                    db.addLog('login', `User ${state.user.email} logged in`);
+                    loginEmailInput.value = '';
+                    loginPassInput.value = '';
+                    if (loginPassInput.type === 'text') {
+                        loginPassInput.type = 'password';
+                        toggleLoginPassword.textContent = 'Show';
+                    }
+                    showApp();
+                } else {
+                    alert('⚠️ Invalid credentials!');
+                }
+            };
+
+            document.getElementById('logoutBtn').onclick = () => {
+                if (state.user) {
+                    db.addLog('logout', `User ${state.user.email} logged out`);
+                }
+                state.user = null;
+                localStorage.removeItem('currentUser');
+                document.getElementById('app').classList.add('hidden');
+                document.getElementById('auth-screen').classList.remove('hidden');
+                loginEmailInput.value = '';
+                loginPassInput.value = '';
+                if (loginPassInput.type === 'text') {
+                    loginPassInput.type = 'password';
+                    toggleLoginPassword.textContent = 'Show';
+                }
+            };
+        }
+
+        // ============================================================
+        //  APP UI
+        // ============================================================
+        function showApp() {
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            // render user display and avatar
+            const userDisplay = document.getElementById('userDisplay');
+            const displayName = state.user.name?.trim() || state.user.email;
+            userDisplay.innerHTML = `<i class="fas fa-user-circle"></i> ${displayName}`;
+            userDisplay.onclick = openProfileEditor;
+            userDisplay.style.cursor = 'pointer';
+
+            const avatarEl = document.getElementById('userAvatar');
+            if (state.user?.photo) {
+                avatarEl.src = state.user.photo;
+                avatarEl.classList.remove('hidden');
+            } else {
+                avatarEl.classList.add('hidden');
+            }
+            avatarEl.onerror = () => avatarEl.classList.add('hidden');
+            avatarEl.onclick = openProfilePhotoViewer;
+            avatarEl.style.cursor = 'pointer';
+
+            // bind profile edit button
+            const editBtn = document.getElementById('editProfileBtn');
+            if (editBtn) editBtn.onclick = openProfileEditor;
+
+            const isAdmin = state.user?.role === 'admin';
+            document.querySelectorAll('.admin-only').forEach(el => {
+                el.classList.toggle('visible', isAdmin);
+            });
+
+            setupViewTabs();
+            showView('dashboard');
+            if (document.getElementById('productRows').children.length === 0) {
+                addProductRow();
+            }
+            setTimeout(setupInventoryEvents, 100);
+        }
+
+        function showView(view) {
+            document.querySelectorAll('.view-tabs .tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.view === view);
+            });
+
+            document.querySelectorAll('.view-panel').forEach(panel => {
+                panel.classList.toggle('hidden', panel.id !== `${view}-view`);
+            });
+
+            state.currentView = view;
+            refreshAll();
+            if (view === 'inventory') {
+                setTimeout(setupInventoryEvents, 100);
+            }
+        }
+
+        function setupViewTabs() {
+            document.querySelectorAll('.view-tabs .tab').forEach(tab => {
+                tab.onclick = () => {
+                    if (tab.classList.contains('admin-only') && !tab.classList.contains('visible')) return;
+                    showView(tab.dataset.view);
+                };
+            });
+        }
+
+        function refreshAll() {
+            updateDashboard();
+            renderOrders();
+            renderRecentUploads();
+            if (state.user?.role === 'admin') {
+                renderInventory();
+                renderUsers();
+                renderLogs();
+            }
+        }
+
+        // ============================================================
+        //  DASHBOARD
+        // ============================================================
+        function updateDashboard() {
+            const orders = db.getOrders();
+            const users = db.getUsers();
+            const inv = getInventory();
+            const totalStock = inv.reduce((sum, i) => sum + i.stock, 0);
+
+            document.getElementById('stat-total').textContent = orders.length;
+            document.getElementById('stat-users').textContent = users.length;
+            const statProductsEl = document.getElementById('stat-products');
+            if (statProductsEl) {
+                statProductsEl.textContent = inv.length;
+            }
+            document.getElementById('stat-total-stock').textContent = totalStock;
+
+            const recent = orders.slice(0, 5);
+            const activityHtml = recent.length ? recent.map(o => {
+                const products = o.products && o.products.length ? o.products : [{ name: o.productName || 'No product',
+                    qty: o.quantity || 0
+                }];
+                const productSummary = products.map(p => `${p.name}×${p.qty}`).join(', ');
+                return `
+                            <div class="log-entry">
+                                <span><i class="fas fa-box"></i> ${o.orderNumber} — ${productSummary}</span>
+                            </div>
+                        `;
+            }).join('') : '<p style="color:var(--text-secondary);">No recent activity</p>';
+
+            document.getElementById('recentActivity').innerHTML = activityHtml;
+        }
+
+        // ============================================================
+        //  ORDERS
+        // ============================================================
+        function renderOrders() {
+            const orders = db.getOrders();
+            const search = document.getElementById('orderSearch').value.toLowerCase();
+            const filtered = orders.filter(o => {
+                const orderNumber = (o.orderNumber || '').toLowerCase();
+                let productMatch = false;
+                if (o.products && o.products.length) {
+                    productMatch = o.products.some(p => (p.name || '').toLowerCase().includes(search));
+                } else {
+                    productMatch = (o.productName || '').toLowerCase().includes(search);
+                }
+                const matchSearch = !search || orderNumber.includes(search) || productMatch;
+                return matchSearch;
+            });
+
+            const container = document.getElementById('orderList');
+
+            if (!filtered.length) {
+                container.innerHTML = `
+                            <div class="empty-state">
+                                <i class="fas fa-box-open"></i>
+                                <p>No orders found</p>
+                            </div>
+                        `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(order => {
+                const photosHtml = order.photos && order.photos.length ? `
+                            <div class="order-photos">
+                                ${order.photos.map((src, i) => `
+                                    <img src="${src}" alt="Photo ${i+1}" onclick="viewImage('${src}')"/>
+                                `).join('')}
+                            </div>
+                        ` : '';
+
+                let productsHtml = '';
+                const formatProductTag = (name, qty) => {
+                    const partCode = getInventoryPartCode(name);
+                    const label = partCode ? `${partCode} - ${name}` : name;
+                    return `
+                                <span class="product-tag">
+                                    ${label}
+                                    <span class="qty-badge">${qty}</span>
+                                </span>
+                            `;
+                };
+
+                if (order.products && order.products.length) {
+                    productsHtml = `
+                                <div class="product-list">
+                                    ${order.products.map(p => formatProductTag(p.name, p.qty)).join('')}
+                                </div>
+                            `;
+                } else if (order.productName) {
+                    productsHtml = `
+                                <div class="product-list">
+                                    ${formatProductTag(order.productName, order.quantity || 0)}
+                                </div>
+                            `;
+                }
+
+                return `
+                            <div class="order-item">
+                                <div class="order-meta">
+                                    <div>
+                                        <span class="order-id"><i class="fas fa-hashtag"></i> ${order.orderNumber}</span>
+                                        <span class="order-by">by ${order.uploadedBy || 'Unknown'}</span>
+                                    </div>
+                                </div>
+                                ${productsHtml}
+                                ${order.warehouse ? `<div style="color:var(--text-secondary); font-size:0.85rem;"><i class="fas fa-warehouse"></i> ${order.warehouse}</div>` : ''}
+                                <div style="color:var(--text-secondary); font-size:0.85rem;">
+                                    <i class="fas fa-clock"></i> ${new Date(order.createdAt).toLocaleString()}
+                                </div>
+                                ${photosHtml}
+                                <div style="margin-top:8px; display:flex; gap:8px;">
+                                    <button class="btn-outline" onclick="openOrderViewer('${order.id}')">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button class="btn-danger" onclick="deleteOrder('${order.id}')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+            }).join('');
+        }
+
+        function clearOrderFilters() {
+            document.getElementById('orderSearch').value = '';
+            renderOrders();
+        }
+
+        function deleteOrder(id) {
+            const reason = prompt('Please enter a reason for deleting this order:');
+            if (reason === null) return;
+            if (!reason.trim()) {
+                alert('⚠️ Deletion reason is required.');
+                return;
+            }
+            const orders = db.getOrders().filter(o => o.id !== id);
+            db.saveOrders(orders);
+            db.addLog('delete_order', `Deleted order ${id} — Reason: ${reason.trim()}`);
+            renderOrders();
+            updateDashboard();
+            renderRecentUploads();
+        }
+
+        function viewImage(src) {
+            const win = window.open('');
+            win.document.write(
+                `<img src="${src}" style="max-width:100%; max-height:95vh; display:block; margin:auto;"/>`);
+            win.document.title = 'Image Preview';
+        }
+
+        // ============================================================
+        //  UPLOAD – Product Rows with Qty Toggles (no default value)
+        // ============================================================
+        function addProductRow(name = '', qty = '') {
+            const container = document.getElementById('productRows');
+            const row = document.createElement('div');
+            row.className = 'product-row';
+            const qtyVal = (qty !== undefined && qty !== '' && !isNaN(qty) && Number(qty) > 0) ? Number(qty) : '';
+            row.innerHTML = `
+                        <div class="input-wrapper">
+                            <input type="text" placeholder="Product name" value="${name}" required autocomplete="off" />
+                            <div class="suggestions"></div>
+                        </div>
+                        <div class="qty-group">
+                            <button type="button" class="qty-btn" onclick="adjustQty(this, -1)">−</button>
+                            <input type="number" min="1" placeholder="Qty" value="${qtyVal}" required />
+                            <button type="button" class="qty-btn" onclick="adjustQty(this, 1)">+</button>
+                        </div>
+                        <button type="button" class="remove-product" onclick="removeProductRow(this)" title="Remove product">
+                            <i class="fas fa-times-circle"></i>
+                        </button>
+                    `;
+            container.appendChild(row);
+            updateRemoveButtons();
+
+            const input = row.querySelector('input[type="text"]');
+            const suggestionsDiv = row.querySelector('.suggestions');
+            setupAutocomplete(input, suggestionsDiv);
+        }
+
+        function adjustQty(btn, delta) {
+            const row = btn.closest('.product-row');
+            const input = row.querySelector('.qty-group input[type="number"]');
+            let val = parseInt(input.value);
+            if (isNaN(val)) val = 0;
+            val = Math.max(1, val + delta);
+            input.value = val;
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+
+        function removeProductRow(btn) {
+            const row = btn.closest('.product-row');
+            if (document.getElementById('productRows').children.length <= 1) {
+                alert('⚠️ At least one product is required.');
+                return;
+            }
+            row.remove();
+            updateRemoveButtons();
+        }
+
+        function updateRemoveButtons() {
+            const rows = document.querySelectorAll('#productRows .product-row');
+            rows.forEach((row, i) => {
+                const btn = row.querySelector('.remove-product');
+                if (rows.length <= 1) {
+                    btn.style.visibility = 'hidden';
+                } else {
+                    btn.style.visibility = 'visible';
+                }
+            });
+        }
+
+        // ============================================================
+        //  CUSTOM AUTOCOMPLETE
+        // ============================================================
+        function setupAutocomplete(input, suggestionsDiv) {
+            let currentFocus = -1;
+
+            const showSuggestions = (value) => {
+                if (value.length < 2) {
+                    suggestionsDiv.style.display = 'none';
+                    return;
+                }
+                const inv = getInventory();
+                const filtered = inv.filter(item =>
+                    item.productName.toLowerCase().includes(value.toLowerCase())
+                );
+                const top = filtered.slice(0, 10);
+
+                if (top.length === 0) {
+                    suggestionsDiv.style.display = 'none';
+                    return;
+                }
+
+                suggestionsDiv.innerHTML = '';
+                top.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.textContent = item.productName;
+                    div.dataset.index = index;
+                    div.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        input.value = item.productName;
+                        suggestionsDiv.style.display = 'none';
+                        input.focus();
+                    });
+                    suggestionsDiv.appendChild(div);
+                });
+                suggestionsDiv.style.display = 'block';
+                currentFocus = -1;
+            };
+
+            const hideSuggestions = () => {
+                setTimeout(() => {
+                    suggestionsDiv.style.display = 'none';
+                }, 200);
+            };
+
+            input.addEventListener('input', (e) => {
+                const value = e.target.value.trim();
+                showSuggestions(value);
+            });
+
+            input.addEventListener('keydown', (e) => {
+                const items = suggestionsDiv.querySelectorAll('.suggestion-item');
+                if (items.length === 0) return;
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    currentFocus = (currentFocus + 1) % items.length;
+                    highlightItem(items, currentFocus);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    currentFocus = (currentFocus - 1 + items.length) % items.length;
+                    highlightItem(items, currentFocus);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (currentFocus >= 0 && currentFocus < items.length) {
+                        input.value = items[currentFocus].textContent;
+                        suggestionsDiv.style.display = 'none';
+                    }
+                } else if (e.key === 'Escape') {
+                    suggestionsDiv.style.display = 'none';
+                }
+            });
+
+            input.addEventListener('blur', hideSuggestions);
+
+            function highlightItem(items, index) {
+                items.forEach((item, i) => {
+                    item.style.background = i === index ? 'var(--hover-bg)' : 'transparent';
+                });
+                if (index >= 0 && index < items.length) {
+                    items[index].scrollIntoView({ block: 'nearest' });
+                }
+            }
+        }
+
+        // ============================================================
+        //  UPLOAD – Submit (with popup messages)
+        // ============================================================
+        let selectedPhotos = [];
+
+        document.getElementById('orderPhotos').onchange = (e) => {
+            const files = e.target.files;
+            selectedPhotos = [];
+            const preview = document.getElementById('uploadPreview');
+
+            if (!files.length) {
+                preview.innerHTML = '<div class="placeholder">No photos selected</div>';
+                return;
+            }
+
+            let loaded = 0;
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    selectedPhotos.push(evt.target.result);
+                    loaded++;
+                    if (loaded === files.length) {
+                        preview.innerHTML = selectedPhotos.map((src) =>
+                            `<img src="${src}" alt="Preview"/>`
+                        ).join('');
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        };
+
+        document.getElementById('uploadOrderBtn').onclick = () => {
+            const orderNumber = document.getElementById('orderNumber').value.trim();
+
+            const rows = document.querySelectorAll('#productRows .product-row');
+            const products = [];
+            let valid = true;
+            let errorMsg = '';
+
+            rows.forEach(row => {
+                const nameInput = row.querySelector('input[type="text"]');
+                const qtyInput = row.querySelector('.qty-group input[type="number"]');
+                const name = nameInput.value.trim();
+                const qty = parseInt(qtyInput.value);
+                if (!name) {
+                    valid = false;
+                    errorMsg = '⚠️ Please enter a product name for all rows.';
+                    return;
+                }
+                if (!qty || qty < 1) {
+                    valid = false;
+                    errorMsg = `⚠️ Please set a valid quantity (min 1) for "${name || 'product'}". Use + / − buttons or type.`;
+                    return;
+                }
+                products.push({ name, qty });
+            });
+
+            if (!valid) { alert(errorMsg); return; }
+            if (!products.length) { alert('⚠️ Please add at least one product.'); return; }
+            if (!orderNumber) { alert('⚠️ Order Number is required.'); return; }
+            if (!selectedPhotos.length) { alert('⚠️ Please select at least one image.'); return; }
+
+            const stockResults = [];
+            let allOk = true;
+            for (let p of products) {
+                let item = findInventoryItem(p.name);
+                if (!item) {
+                    updateStock(p.name, 0, 'Auto-created from order');
+                    item = findInventoryItem(p.name);
+                }
+                if (item.stock < p.qty) {
+                    allOk = false;
+                    stockResults.push(`⚠️ Insufficient stock for "${p.name}" (available: ${item.stock}, requested: ${p.qty})`);
+                } else {
+                    const result = reduceStockForOrder(p.name, p.qty);
+                    if (!result.success) {
+                        allOk = false;
+                        stockResults.push(`⚠️ ${result.message}`);
+                    } else {
+                        stockResults.push(`✅ ${result.message}`);
+                    }
+                }
+            }
+
+            if (!allOk) {
+                alert('❌ Stock errors:\n' + stockResults.join('\n'));
+                return;
+            }
+
+            const order = {
+                id: Date.now().toString(),
+                orderNumber,
+                products: products,
+                warehouse: '',
+                status: 'pending',
+                photos: selectedPhotos,
+                uploadedBy: state.user?.email || 'system',
+                createdAt: new Date().toISOString()
+            };
+
+            const orders = db.getOrders();
+            orders.unshift(order);
+            db.saveOrders(orders);
+            db.addLog('upload_order', `Uploaded order ${orderNumber} with ${products.length} product(s)`);
+
+            alert(`✅ Order "${orderNumber}" uploaded successfully!\nStock updated for ${products.length} product(s).`);
+
+            document.getElementById('orderNumber').value = '';
+            document.getElementById('productRows').innerHTML = '';
+            addProductRow();
+            document.getElementById('orderPhotos').value = '';
+            selectedPhotos = [];
+            document.getElementById('uploadPreview').innerHTML = '<div class="placeholder">No photos selected</div>';
+
+            renderOrders();
+            updateDashboard();
+            renderRecentUploads();
+            if (state.user?.role === 'admin') renderInventory();
+        };
+
+        // ============================================================
+        //  RECENT UPLOADS
+        // ============================================================
+        function renderRecentUploads() {
+            const orders = db.getOrders().slice(0, 6);
+            const container = document.getElementById('recentUploads');
+
+            if (!orders.length) {
+                container.innerHTML = '<p style="color:var(--text-secondary); font-size:0.9rem;">No recent uploads</p>';
+                return;
+            }
+
+            container.innerHTML = orders.map(o => {
+                const thumb = o.photos?.length ? o.photos[0] : '';
+                const products = o.products && o.products.length ? o.products : [{ name: o.productName || 'No product',
+                    qty: o.quantity || 0
+                }];
+                const productSummary = products.map(p => `${p.name}×${p.qty}`).join(', ');
+                return `
+                            <div class="upload-item">
+                                ${thumb ? `<img src="${thumb}" alt=""/>` : `<div style="width:44px;height:44px;border-radius:10px;background:var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);"><i class="fas fa-box"></i></div>`}
+                                <div class="meta">
+                                    <strong>${o.orderNumber}</strong>
+                                    <small>${productSummary}</small>
+                                    <small style="display:block;color:var(--text-secondary);">${new Date(o.createdAt).toLocaleDateString()}</small>
+                                </div>
+                            </div>
+                        `;
+            }).join('');
+        }
+
+        // ============================================================
+        //  INVENTORY – Add Product Manually
+        // ============================================================
+        function addNewProduct() {
+            const codeInput = document.getElementById('newProductCode');
+            const nameInput = document.getElementById('newProductName');
+            const stockInput = document.getElementById('newProductStock');
+            const code = codeInput.value.trim().toUpperCase();
+            const name = nameInput.value.trim();
+            const stock = parseInt(stockInput.value) || 0;
+
+            if (!name) {
+                alert('⚠️ Please enter a product name.');
+                return;
+            }
+
+            if (stock < 1) {
+                alert('⚠️ Please enter a quantity of 1 or more.');
+                return;
+            }
+
+            const existingItem = findInventoryItem(name);
+            if (existingItem) {
+                if (code) {
+                    existingItem.partCode = code;
+                }
+                const oldStock = existingItem.stock;
+                updateStock(name, stock, `Manual addition (+${stock})`);
+                codeInput.value = '';
+                nameInput.value = '';
+                stockInput.value = '0';
+                renderInventory();
+                updateDashboard();
+                alert(`✅ Product "${name}" stock increased from ${oldStock} to ${oldStock + stock} (+${stock}).`);
+                return;
+            }
+
+            updateStock(name, stock, `Manual addition (initial stock ${stock})`);
+            const inv = getInventory();
+            const createdItem = inv.find(i => i.productName.toLowerCase() === name.toLowerCase());
+            if (createdItem) {
+                createdItem.partCode = code;
+                saveInventory(inv);
+            }
+            codeInput.value = '';
+            nameInput.value = '';
+            stockInput.value = '0';
+            renderInventory();
+            updateDashboard();
+            alert(`✅ Product "${name}" added with ${stock} units.`);
+        }
+
+        // ============================================================
+        //  INVENTORY – Render & Event Delegation
+        // ============================================================
+        function renderInventory() {
+            const rawSearch = (document.getElementById('invSearch')?.value || '').trim().toLowerCase();
+            const normalizedSearch = rawSearch.replace(/[\-_/]+/g, ' ').replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+            let inv = getInventory();
+
+            if (normalizedSearch) {
+                const terms = normalizedSearch.split(/\s+/).filter(Boolean);
+                inv = inv.filter(i => {
+                    const normalizedName = i.productName.toLowerCase().replace(/[\-_/]+/g, ' ').replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+                    return terms.every(term => normalizedName.includes(term));
+                });
+            }
+
+            inv.sort((a, b) => a.productName.localeCompare(b.productName));
+
+            const total = inv.reduce((s, i) => s + i.stock, 0);
+            const low = inv.filter(i => i.stock < 10).length;
+
+            document.getElementById('inv-total-products').textContent = inv.length;
+            document.getElementById('inv-total-units').textContent = total;
+            document.getElementById('inv-low-stock').textContent = low;
+
+            const tbody = document.getElementById('inventoryBody');
+
+            if (!inv.length) {
+                tbody.innerHTML =
+                    `<tr><td colspan="5" class="empty-state" style="padding:30px;">No products in inventory</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = inv.map(item => {
+                const stock = item.stock;
+                let statusClass = 'high';
+                let statusLabel = '✅ In Stock';
+                if (stock <= 0) { statusClass = 'danger';
+                    statusLabel = '❌ Out of Stock'; } else if (stock < 10) { statusClass = 'warning';
+                    statusLabel = '⚠️ Low Stock'; } else { statusClass = 'success';
+                    statusLabel = '✅ In Stock'; }
+
+                const escapedName = item.productName.replace(/"/g, '&quot;');
+                const encodedName = encodeURIComponent(item.productName);
+
+                return `
+                            <tr>
+                                <td>${item.partCode || ''}</td>
+                                <td><strong>${item.productName}</strong></td>
+                                <td class="stock-qty ${statusClass}">${stock}</td>
+                                <td><span class="badge ${statusClass}">${statusLabel}</span></td>
+                                <td>
+                                    <div class="inventory-actions">
+                                        <input type="number" id="adjust-${item.productName.replace(/\s/g,'_')}" value="1" min="1" style="width:60px;" data-product="${escapedName}" data-encoded="${encodedName}" onkeydown="handleInventoryEnter(event)" />
+                                        <button class="add-btn" data-product="${escapedName}" data-direction="1"><i class="fas fa-plus"></i></button>
+                                        <button class="remove-btn" data-product="${escapedName}" data-direction="-1"><i class="fas fa-minus"></i></button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="delete-btn" onclick="deleteInventoryItem('${escapedName}')" style="padding:4px 12px; border-radius:30px; border:none; cursor:pointer;">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+            }).join('');
+
+            setupInventoryEvents();
+        }
+
+        // ============================================================
+        //  INVENTORY – Enter key handler — ADD to existing stock
+        // ============================================================
+        function handleInventoryEnter(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const input = event.target;
+                let productName = input.dataset.product;
+                if (input.dataset.encoded) {
+                    try {
+                        productName = decodeURIComponent(input.dataset.encoded);
+                    } catch (_) { /* fallback to data-product */ }
+                }
+                if (!productName) {
+                    const id = input.id;
+                    if (id && id.startsWith('adjust-')) {
+                        productName = id.replace('adjust-', '').replace(/_/g, ' ');
+                    }
+                }
+                if (!productName) {
+                    alert('⚠️ Could not identify product.');
+                    return;
+                }
+                productName = productName.replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+
+                const value = parseInt(input.value);
+                if (isNaN(value) || value < 1) {
+                    alert('⚠️ Please enter a valid number (1 or greater) to add to stock.');
+                    return;
+                }
+
+                const item = findInventoryItem(productName);
+                if (!item) {
+                    alert(`⚠️ Product "${productName}" not found.`);
+                    return;
+                }
+
+                const oldStock = item.stock;
+                // ADD the typed value to the existing stock (don't replace)
+                const newStock = oldStock + value;
+                updateStock(productName, value, `Added ${value} units (Enter key)`);
+                renderInventory();
+                updateDashboard();
+                alert(`✅ Stock for "${productName}" increased from ${oldStock} to ${newStock} (+${value}).`);
+                input.value = 1;
+            }
+        }
+
+        // ============================================================
+        //  INVENTORY – Event delegation for + / - buttons
+        // ============================================================
+        function setupInventoryEvents() {
+            const tbody = document.getElementById('inventoryBody');
+            if (!tbody) return;
+            if (tbody._listenerAttached) {
+                tbody.removeEventListener('click', inventoryClickHandler);
+            }
+            tbody.addEventListener('click', inventoryClickHandler);
+            tbody._listenerAttached = true;
+        }
+
+        function inventoryClickHandler(e) {
+            const target = e.target.closest('button');
+            if (!target) return;
+
+            const product = target.getAttribute('data-product');
+            const direction = target.getAttribute('data-direction');
+
+            if (product && direction) {
+                e.preventDefault();
+                const dir = parseInt(direction);
+                if (isNaN(dir)) return;
+
+                const row = target.closest('tr');
+                if (!row) return;
+                const input = row.querySelector('input[type="number"]');
+                let delta = parseInt(input?.value || 1);
+                if (delta < 1) delta = 1;
+                delta = delta * dir;
+
+                const cleanName = product.replace(/&quot;/g, '"');
+                const item = findInventoryItem(cleanName);
+                if (!item) {
+                    alert('⚠️ Product not found');
+                    return;
+                }
+
+                const newStock = Math.max(0, item.stock + delta);
+                if (newStock !== item.stock + delta) {
+                    alert('⚠️ Stock cannot go below 0.');
+                    return;
+                }
+
+                updateStock(cleanName, delta, `Manual adjustment (${delta > 0 ? '+' : ''}${delta})`);
+                renderInventory();
+                updateDashboard();
+                if (input) input.value = 1;
+                alert(`✅ Stock for "${cleanName}" ${delta > 0 ? 'increased' : 'decreased'} by ${Math.abs(delta)}. New stock: ${item.stock + delta}`);
+            }
+        }
+
+        // ============================================================
+        //  INVENTORY – Delete
+        // ============================================================
+        function deleteInventoryItem(productName) {
+            const cleanName = productName.replace(/&quot;/g, '"');
+            if (!confirm(`Delete product "${cleanName}" from inventory?`)) return;
+            let inv = getInventory();
+            inv = inv.filter(i => i.productName.toLowerCase() !== cleanName.toLowerCase());
+            saveInventory(inv);
+            db.addLog('inventory_delete', `Deleted product "${cleanName}"`);
+            renderInventory();
+            updateDashboard();
+            alert(`✅ Product "${cleanName}" deleted.`);
+        }
+
+        function downloadInventoryCsv() {
+            const inv = getInventory();
+            if (!inv.length) {
+                alert('⚠️ No inventory data available to download.');
+                return;
+            }
+
+            const rows = [['Product Name', 'Stock']];
+            inv.sort((a, b) => a.productName.localeCompare(b.productName));
+            inv.forEach(item => {
+                rows.push([item.productName, item.stock]);
+            });
+
+            const csvContent = rows.map(row => row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(',')).join('\r\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'stock-list.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        window.deleteInventoryItem = deleteInventoryItem;
+
+        // ============================================================
+        //  USERS (Admin)
+        // ============================================================
+        document.getElementById('createBulkUsersBtn').onclick = () => {
+            const feedback = document.getElementById('bulkUserFeedback');
+            const email = document.getElementById('bulkUserPrefix').value.trim().toLowerCase();
+            const password = document.getElementById('bulkUserPassword').value;
+            const role = document.getElementById('bulkUserRole').value;
+
+            if (!email || !password) {
+                alert('⚠️ Please provide an email and password.');
+                return;
+            }
+            if (!isValidEmail(email)) {
+                alert('⚠️ Please enter a valid email address containing @.');
+                return;
+            }
+
+            const users = db.getUsers();
+            if (users.some(u => u.email.toLowerCase() === email)) {
+                alert('⚠️ This user already exists.');
+                return;
+            }
+
+            users.push({
+                id: `user-${Date.now()}`,
+                email,
+                password,
+                role,
+                createdAt: new Date().toISOString()
+            });
+
+            db.saveUsers(users);
+            db.addLog('create_user', `Created user ${email} with role ${role}`);
+            alert(`✅ Created user: ${email}`);
+            document.getElementById('bulkUserPrefix').value = '';
+            document.getElementById('bulkUserPassword').value = 'Welcome@123';
+            renderUsers();
+            updateDashboard();
+        };
+
+        function renderUsers() {
+            const users = db.getUsers();
+            const currentEmail = state.user?.email?.toLowerCase();
+            const visibleUsers = users.filter(u => u.email.toLowerCase() !== currentEmail);
+            const isAdmin = state.user?.role === 'admin';
+            document.getElementById('userCountLabel').textContent = visibleUsers.length;
+            document.getElementById('usersList').innerHTML = visibleUsers.map(u => {
+                return `
+                    <div class="order-item">
+                        <div class="flex-between">
+                            <div>
+                                <strong>${u.email.toLowerCase()}</strong>
+                                <span class="badge">${u.role}</span>
+                            </div>
+                            <div style="display:flex; gap:8px; align-items:center;">
+                                ${isAdmin ? `<button class="btn-secondary" onclick="changeUserPassword('${u.id}')"><i class="fas fa-key"></i> Change Password</button>` : ''}
+                                ${isAdmin && u.email.toLowerCase() !== 'admin@uvwarehouse.com' ? `
+                                    <button class="btn-danger" onclick="deleteUser('${u.id}')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteUser(id) {
+            const users = db.getUsers();
+            const user = users.find(u => u.id === id);
+            if (user && user.email?.toLowerCase() === 'admin@uvwarehouse.com') {
+                alert('⚠️ This account cannot be deleted.');
+                return;
+            }
+            if (!confirm('Delete this user?')) return;
+            const remainingUsers = users.filter(u => u.id !== id);
+            db.saveUsers(remainingUsers);
+            db.addLog('delete_user', `Deleted user ${id}`);
+            renderUsers();
+            updateDashboard();
+            alert('✅ User deleted.');
+        }
+
+
+        let passwordChangeTargetId = null;
+
+        function changeUserPassword(userId) {
+            const users = db.getUsers();
+            const idx = users.findIndex(u => u.id === userId);
+            if (idx === -1) return alert('User not found.');
+            const oldPassword = users[idx].password || '(no password set)';
+            passwordChangeTargetId = userId;
+            document.getElementById('oldPasswordValue').textContent = oldPassword;
+            document.getElementById('newPasswordForUser').value = '';
+            document.getElementById('passwordChangeModal').style.display = 'flex';
+        }
+
+        function closePasswordChangeModal() {
+            passwordChangeTargetId = null;
+            document.getElementById('passwordChangeModal').style.display = 'none';
+        }
+
+        function saveChangedUserPassword() {
+            if (!passwordChangeTargetId) return;
+            const newPassword = document.getElementById('newPasswordForUser').value.trim();
+            if (!newPassword) {
+                alert('⚠️ Password cannot be empty.');
+                return;
+            }
+            const users = db.getUsers();
+            const idx = users.findIndex(u => u.id === passwordChangeTargetId);
+            if (idx === -1) return alert('User not found.');
+            users[idx].password = newPassword;
+            db.saveUsers(users);
+            db.addLog('change_password', `Changed password for ${users[idx].email}`);
+            closePasswordChangeModal();
+            alert('✅ Password updated successfully.');
+        }
+
+        // ============================================================
+        //  PROFILE EDITOR (Current User)
+        // ============================================================
+        function openProfileEditor() {
+            if (!state.user) return alert('No user logged in');
+            document.getElementById('profileEmail').value = state.user.email || '';
+            document.getElementById('profileName').value = state.user.name || '';
+            const previewImg = document.getElementById('avatarPreviewImg');
+            previewImg.alt = 'Profile photo preview';
+            if (state.user.photo) {
+                previewImg.src = state.user.photo;
+                previewImg.style.display = 'block';
+            } else {
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+            }
+            document.getElementById('profileModal').style.display = 'flex';
+            // bind file input
+            const fileIn = document.getElementById('profilePhotoInput');
+            fileIn.value = '';
+            fileIn.onchange = handleProfilePhotoChange;
+        }
+
+        function openProfilePhotoViewer() {
+            if (!state.user) return alert('No user logged in');
+            const viewerImg = document.getElementById('photoViewerImg');
+            if (state.user.photo) {
+                viewerImg.src = state.user.photo;
+            } else {
+                viewerImg.src = '';
+            }
+            document.getElementById('photoViewerModal').style.display = 'flex';
+        }
+
+
+        function closePhotoViewer() {
+            document.getElementById('photoViewerModal').style.display = 'none';
+        }
+
+        function closeProfileEditor() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        function handleProfilePhotoChange(evt) {
+            const file = evt.target.files && evt.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreviewImg').src = e.target.result;
+                // temporary store in modal element dataset
+                document.getElementById('profileModal').dataset.preview = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveProfileChanges() {
+            if (!state.user) return alert('No user logged in');
+            const name = document.getElementById('profileName').value.trim();
+            const email = document.getElementById('profileEmail').value.trim();
+            const previewData = document.getElementById('profileModal').dataset.preview;
+
+            const users = db.getUsers();
+            const idx = users.findIndex(u => (u.id && state.user.id && u.id === state.user.id) || u.email === state.user.email);
+            if (idx === -1) return alert('User record not found');
+            if (name) users[idx].name = name;
+            if (previewData) users[idx].photo = previewData;
+            db.saveUsers(users);
+            // update state and localStorage
+            state.user = users[idx];
+            localStorage.setItem('currentUser', JSON.stringify(state.user));
+            db.addLog('update_profile', `Updated profile for ${state.user.email}`);
+            // refresh UI
+            const displayName = state.user.name?.trim() || state.user.email;
+            document.getElementById('userDisplay').innerHTML = `<i class="fas fa-user-circle"></i> ${displayName}`;
+            const avatarEl = document.getElementById('userAvatar');
+            if (state.user.photo) {
+                avatarEl.src = state.user.photo;
+                avatarEl.classList.remove('hidden');
+            }
+            closeProfileEditor();
+            alert('✅ Profile updated');
+        }
+
+        // ============================================================
+        // Order viewer + image download
+        // ============================================================
+        function openOrderViewer(id) {
+            const orders = db.getOrders();
+            const order = orders.find(o => o.id === id);
+            if (!order) return alert('Order not found');
+            document.getElementById('viewerOrderNumber').textContent = order.orderNumber || '';
+            let details = `<div style="color:var(--text);"><strong>By:</strong> ${order.uploadedBy || 'Unknown'}</div>`;
+            details += `<div style="color:var(--text);"><strong>Status:</strong> ${order.status || 'pending'}</div>`;
+            if (order.warehouse) details += `<div style="color:var(--text);"><strong>Warehouse:</strong> ${order.warehouse}</div>`;
+            details += `<div style="color:var(--text);"><strong>Created:</strong> ${new Date(order.createdAt).toLocaleString()}</div>`;
+            if (order.products && order.products.length) {
+                details += `<div style="margin-top:8px;"><strong>Products:</strong> ${order.products.map(p => `${getInventoryPartCode(p.name) ? `${getInventoryPartCode(p.name)} - ` : ''}${p.name}×${p.qty}`).join(', ')}</div>`;
+            } else if (order.productName) {
+                const code = getInventoryPartCode(order.productName);
+                details += `<div style="margin-top:8px;"><strong>Product:</strong> ${code ? `${code} - ` : ''}${order.productName} × ${order.quantity || 0}</div>`;
+            }
+            document.getElementById('viewerDetails').innerHTML = details;
+            const photosEl = document.getElementById('viewerPhotos');
+            photosEl.innerHTML = '';
+            if (order.photos && order.photos.length) {
+                order.photos.forEach((src, i) => {
+                    const wrap = document.createElement('div');
+                    wrap.className = 'viewer-photo-wrap';
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.className = 'viewer-photo';
+                    img.onclick = () => viewImage(src);
+                    const down = document.createElement('a');
+                    down.href = src;
+                    down.download = `${order.orderNumber || 'order'}-photo-${i+1}`;
+                    down.className = 'btn-outline';
+                    down.style.display = 'inline-block';
+                    down.style.marginTop = '6px';
+                    down.textContent = 'Download';
+                    wrap.appendChild(img);
+                    wrap.appendChild(down);
+                    photosEl.appendChild(wrap);
+                });
+            } else {
+                photosEl.innerHTML = '<div style="color:var(--text-secondary)">No photos</div>';
+            }
+            document.getElementById('orderViewer').style.display = 'flex';
+        }
+
+        function closeOrderViewer() {
+            document.getElementById('orderViewer').style.display = 'none';
+        }
+
+        // ============================================================
+        //  LOGS (Admin)
+        // ============================================================
+        function renderLogs() {
+            const logs = db.getLogs();
+            document.getElementById('logsList').innerHTML = logs.map(log => `
+                        <div class="log-entry">
+                            <span><i class="fas fa-info-circle"></i> ${log.action}</span>
+                            <span style="color:var(--text-secondary);">${log.user} · ${new Date(log.timestamp).toLocaleString()}</span>
+                        </div>
+                    `).join('');
+        }
+
+        function clearLogs() {
+            if (!confirm('Clear all logs?')) return;
+            db.saveLogs([]);
+            renderLogs();
+            alert('✅ Logs cleared.');
+        }
+
+        // ============================================================
+        //  THEME TOGGLE
+        // ============================================================
+        function initTheme() {
+            const applyTheme = () => {
+                document.body.classList.toggle('dark', state.theme === 'dark');
+                const btn = document.getElementById('themeToggle');
+                if (state.theme === 'dark') {
+                    btn.innerHTML = '<i class="fas fa-sun"></i> <span id="themeLabel">Light</span>';
+                } else {
+                    btn.innerHTML = '<i class="fas fa-moon"></i> <span id="themeLabel">Dark</span>';
+                }
+            };
+
+            applyTheme();
+            document.getElementById('themeToggle').onclick = () => {
+                state.theme = state.theme === 'dark' ? 'light' : 'dark';
+                localStorage.setItem('theme', state.theme);
+                applyTheme();
+            };
+        }
+
+        // ============================================================
+        //  BOOTSTRAP
+        // ============================================================
+        async function bootstrapApp() {
+            await initPersistentStorage();
+            state.theme = readStorageValue('theme', 'light');
+            initAuth();
+            initTheme();
+
+            if (!db.getUsers().find(u => u.email.toLowerCase() === 'admin@demo.com')) {
+                const users = db.getUsers();
+                users.push({
+                    id: 'admin',
+                    email: 'admin@demo.com',
+                    password: 'admin123',
+                    role: 'admin',
+                    createdAt: new Date().toISOString()
+                });
+                db.saveUsers(users);
+            }
+
+            if (!getInventory().length) {
+                const demoInv = [
+                    { productName: 'Wireless Headphones', stock: 45 },
+                    { productName: 'Bluetooth Speaker', stock: 12 },
+                    { productName: 'USB-C Cable', stock: 8 },
+                    { productName: 'Laptop Stand', stock: 3 },
+                    { productName: 'Mechanical Keyboard', stock: 0 }
+                ];
+                saveInventory(demoInv);
+            }
+
+            setTimeout(() => {
+                if (state.user?.role === 'admin') renderInventory();
+                refreshAll();
+                if (document.getElementById('productRows').children.length === 0) {
+                    addProductRow();
+                }
+                setupInventoryEvents();
+            }, 100);
+        }
+
+        bootstrapApp();
+    </script>
+</body>
+</html>
